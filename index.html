@@ -9,8 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #ffefd5;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fef6e4;
             color: #333;
             user-select: none;
         }
@@ -19,22 +19,22 @@
             max-width: 700px;
             margin: 50px auto;
             padding: 20px;
-            border: 5px dashed #ff4500;
+            border: 5px solid #ff5a5f;
             border-radius: 20px;
-            background-color: #ffdab9;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background-color: #ffcccb;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
         .question {
             font-size: 1.8rem;
             margin-bottom: 20px;
-            color: #ff6347;
+            color: #ff5a5f;
         }
 
         .options button {
             margin-bottom: 15px;
             font-weight: bold;
-            background-color: #ffa07a;
+            background-color: #ff5a5f;
             color: #fff;
             border: none;
             transition: all 0.3s ease;
@@ -42,7 +42,7 @@
 
         .options button:hover {
             transform: scale(1.1);
-            background-color: #ff4500;
+            background-color: #fc9c9d;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
@@ -51,7 +51,7 @@
             height: auto;
             margin: 20px 0;
             border-radius: 15px;
-            border: 5px solid #ff6347;
+            border: 5px solid #ff5a5f;
         }
 
         .btn {
@@ -60,12 +60,12 @@
         }
 
         h1 {
-            color: #ff4500;
-            text-shadow: 2px 2px #ffa07a;
+            color: #ff5a5f;
+            text-shadow: 2px 2px #fc9c9d;
         }
 
         .result h3 {
-            color: #ff4500;
+            color: #ff5a5f;
         }
 
         @media (max-width: 600px) {
@@ -79,9 +79,25 @@
             height: auto;
             border-radius: 15px;
             margin-bottom: 20px;
-            border: 5px solid #ff6347;
+            border: 5px solid #ff5a5f;
+        }
+
+        #bonusPassword {
+            border: 2px solid #fc9c9d;
+            border-radius: 10px;
+        }
+
+        #bonusPassword:focus {
+            border-color: #ff5a5f;
+            box-shadow: 0 0 5px #ff5a5f;
+        }
+
+        .result h2 {
+            color: #ff5a5f;
+            text-shadow: 1px 1px #fc9c9d;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -136,14 +152,14 @@
             },
             {
                 question: "Quem é o namorado favorito da Vitória?",
-                options: ["Lucas", "Matheus", "Vinicius", "Gustavo"],
+                options: ["Otavio", "Pablo", "Gordão", "Gustavo"],
                 correct: "Gustavo",
                 image: "assets/images/pililiu.jpg"
             },
             {
                 question: "Quem é o maior pato no FIFA contra o Otávio?",
-                options: ["Gustavo", "Vinicius", "Carlos", "João"],
-                correct: "Vinicius",
+                options: ["Gustavo", "Gordão", "João Pedro", "Vintão"],
+                correct: "Gordão",
                 image: "assets/images/gordins.jpg"
             }
         ];
