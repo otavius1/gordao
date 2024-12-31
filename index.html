@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz do Amigo da Onça</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffefd5;
+            color: #333;
+            user-select: none;
+        }
+
+        .quiz-container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 5px dashed #ff4500;
+            border-radius: 20px;
+            background-color: #ffdab9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .question {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ff6347;
+        }
+
+        .options button {
+            margin-bottom: 15px;
+            font-weight: bold;
+            background-color: #ffa07a;
+            color: #fff;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .options button:hover {
+            transform: scale(1.1);
+            background-color: #ff4500;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .result img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 15px;
+            border: 5px solid #ff6347;
+        }
+
+        .btn {
+            font-size: 1.2rem;
+            border-radius: 30px;
+        }
+
+        h1 {
+            color: #ff4500;
+            text-shadow: 2px 2px #ffa07a;
+        }
+
+        .result h3 {
+            color: #ff4500;
+        }
+
+        @media (max-width: 600px) {
+            .question {
+                font-size: 1.5rem;
+            }
+        }
+
+        #start-screen img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 5px solid #ff6347;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="start-screen" class="text-center mt-5">
+        <div class="d-flex flex-column align-items-center">
+            <img src="assets/images/pitoco_abertura.jpg" alt="Imagem de Abertura" class="img-fluid mb-3">
+            <h1>Bem-vindo ao Quiz do Amigordão! 🤪</h1>
+            <p>Teste seu humor e descubra sua versão do Vinicius!</p>
+            <button class="btn btn-danger btn-lg mt-3" onclick="startQuiz()">Iniciar Quiz 🎉</button>
+        </div>
+    </div>
+
+    <div class="quiz-container text-center" id="quiz-container" style="display: none;">
+        <h1>Quiz do Amigo da Onça 🤪</h1>
+        <div id="quiz-content"></div>
+    </div>
+
+    <script>
+        const newQuestions = [
+            {
+                question: "Qual é o seu tipo de sobremesa favorito?",
+                options: ["Sorvete", "Bolo", "Chocolate", "Frutas"],
+                scores: ["A", "B", "C", "D"],
+                image: "assets/images/xj.jpg"
+            },
+            {
+                question: "Qual é o seu animal favorito?",
+                options: ["Cachorro", "Gato", "Papagaio", "Tigre"],
+                scores: ["B", "C", "D", "A"],
+                image: "assets/images/motomoto.jpg"
+            },
+            {
+                question: "Qual é o seu passatempo favorito?",
+                options: ["Ler", "Jogar videogame", "Assistir TV", "Praticar esportes"],
+                scores: ["C", "D", "A", "B"],
+                image: "assets/images/passatempo.webp"
+            },
+            {
+                question: "Qual é a sua cor favorita?",
+                options: ["Vermelho", "Azul", "Amarelo", "Verde"],
+                scores: ["D", "A", "B", "C"],
+                image: "assets/images/tarcisio.jpg"
+            }
+        ];
+
+        const oldQuestions = [
+            {
+                question: "Quem é o gordinho mais sapequinha que tem?",
+                options: ["Carlos", "João", "Vinicius", "Pedro"],
+                correct: "Vinicius",
+                image: "assets/images/saul.jpg"
+            },
+            {
+                question: "Quem é o namorado favorito da Vitória?",
+                options: ["Lucas", "Matheus", "Vinicius", "Gustavo"],
+                correct: "Gustavo",
+                image: "assets/images/pililiu.jpg"
+            },
+            {
+                question: "Quem é o maior pato no FIFA contra o Otávio?",
+                options: ["Gustavo", "Vinicius", "Carlos", "João"],
+                correct: "Vinicius",
+                image: "assets/images/gordins.jpg"
+            }
+        ];
+
+        const results = {
+            A: {
+                title: "Gordin Jaguatirica 🐆",
+                image: "assets/images/jaguatirica.jpg",
+                description: "Vinicius em sua forma mais selvagem, pronto para devorar as zebras do São Paulo!"
+            },
+            B: {
+                title: "Pitoco Jefferson 🤓",
+                image: "assets/images/pitoco.jpg",
+                description: "O influencer mais carismático e desastrado da turma!"
+            },
+            C: {
+                title: "Irmão do Otávio 🧔",
+                image: "assets/images/gordins.jpg",
+                description: "Sempre o irmão mais divertido, mas perde no FIFA!"
+            },
+            D: {
+                title: "Vinicius Sofrendo pela Vitória 💔",
+                image: "assets/images/sofrendo.jpg",
+                description: "Ele só queria amor, mas acabou com memes."
+            }
+        };
+
+        let currentQuestion = 0;
+        const scores = { A: 0, B: 0, C: 0, D: 0 };
+        let isOldQuestion = false;
+
+        function startQuiz() {
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("quiz-container").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const quizContent = document.getElementById("quiz-content");
+            quizContent.innerHTML = "";
+
+            const questionData = isOldQuestion ? oldQuestions[currentQuestion] : newQuestions[currentQuestion];
+
+            const questionElement = document.createElement("div");
+            questionElement.className = "question";
+            questionElement.textContent = questionData.question;
+            quizContent.appendChild(questionElement);
+
+            if (questionData.image) {
+                const imgElement = document.createElement("img");
+                imgElement.src = questionData.image;
+                imgElement.alt = "Imagem da Pergunta";
+                imgElement.className = "img-fluid mb-4";
+                quizContent.appendChild(imgElement);
+            }
+
+            const optionsContainer = document.createElement("div");
+            optionsContainer.className = "options d-flex flex-column align-items-center";
+
+            questionData.options.forEach(option => {
+                const button = document.createElement("button");
+                button.className = "btn btn-primary btn-block";
+                button.textContent = option;
+                button.onclick = () => {
+                    if (isOldQuestion) {
+                        checkOldAnswer(option, questionData);
+                    } else {
+                        recordScore(questionData.scores[questionData.options.indexOf(option)]);
+                    }
+                };
+                optionsContainer.appendChild(button);
+            });
+
+            quizContent.appendChild(optionsContainer);
+        }
+
+        function checkOldAnswer(selectedOption, questionData) {
+            const quizContent = document.getElementById("quiz-content");
+            if (selectedOption === questionData.correct) {
+                quizContent.innerHTML = `<div class='result'>
+          <h3>Parabéns! Você acertou! 🎉</h3>
+          ${questionData.image ? `<img src='${questionData.image}' alt='Resultado'>` : ""}
+          <button class='btn btn-success mt-3' onclick='nextQuestion()'>Próxima ➡️</button>
+        </div>`;
+            } else {
+                quizContent.innerHTML = `<div class='result'>
+          <h3>Ops! Você errou! Tente outra vez. 🤔</h3>
+          <button class='btn btn-warning mt-3' onclick='loadQuestion()'>Tentar de novo 🔄</button>
+        </div>`;
+            }
+        }
+
+        function recordScore(score) {
+            scores[score]++;
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (isOldQuestion && currentQuestion >= oldQuestions.length) {
+                isOldQuestion = false;
+                currentQuestion = 0;
+            } else if (!isOldQuestion && currentQuestion >= newQuestions.length) {
+                endQuiz();
+                return;
+            }
+            loadQuestion();
+        }
+
+        function endQuiz() {
+            const quizContent = document.getElementById("quiz-content");
+            const highestScore = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const result = results[highestScore];
+
+            quizContent.innerHTML = `<div class='result'>
+        <h2>${result.title}</h2>
+        <img src='${result.image}' alt='${result.title}' class='img-fluid mb-4'>
+        <p>${result.description}</p>
+        <button class='btn btn-primary mt-3' onclick='restartQuiz()'>Jogar Novamente 🔄</button>
+        <div class="mt-4">
+          <h3>Quer saber o que o gordão disse no discord? 🔒</h3>
+          <input type="password" id="bonusPassword" class="form-control mb-3" placeholder="Digite a senha">
+          <button class="btn btn-secondary" onclick="checkBonusPassword()">Enviar</button>
+          <div id="bonusFeedback" class="mt-3"></div>
+        </div>
+      </div>`;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            isOldQuestion = true;
+            for (let key in scores) {
+                scores[key] = 0;
+            }
+            startQuiz();
+        }
+
+        function checkBonusPassword() {
+            const password = document.getElementById("bonusPassword").value.toLowerCase();
+            const feedback = document.getElementById("bonusFeedback");
+            if (password === "gordaoviado") {
+                feedback.innerHTML = `<p class='text-success'>O gordão disse que: "Ela só é chata quando acorda e fala para!" 😂</p>`;
+            } else {
+                feedback.innerHTML = `<p class='text-danger'>Senha incorreta! Tente novamente.</p>`;
+            }
+        }
+
+        isOldQuestion = true;
+    </script>
+</body>
+
+</html>
